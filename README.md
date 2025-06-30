@@ -1,4 +1,4 @@
-# Task Manager Avanzato
+## Task Manager Avanzato
 
 Sei stato assunto per costruire un **Task Manager Avanzato**, un’app web che permette agli utenti di creare, modificare, organizzare ed eliminare task in modo intuitivo ed efficiente.
 
@@ -221,5 +221,3 @@ L'app dovrà supportare:
 
 ---
 
-Se vuoi posso anche suddividerlo in più file `.md` oppure creare una struttura di cartelle già pronta — dimmi pure!
-# ex-react-task-manager
