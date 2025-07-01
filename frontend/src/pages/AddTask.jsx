@@ -1,15 +1,17 @@
 import { useState, useRef, useMemo } from 'react'
+import useTasks from '../hooks/useTasks';
 
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
 export default function AddTask() {
   // controlled input
   const [title, setTitle] = useState('')
-  const [error, setError] = useState('')
 
   // uncontrolled input
   const descriptionRef = useRef()
   const statusRef = useRef()
+
+  const { addTask } = useTasks()
 
   // title validation
   const isTitleValid = useMemo(() => {
@@ -19,18 +21,31 @@ export default function AddTask() {
   }, [title])
 
   // submit handler
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault()
 
     if (isTitleValid) {
-      console.log(`
-        Titolo : ${title}
-        Descrizione : ${descriptionRef.current.value}
-        Stato: ${statusRef.current.value}
-        `);
+      const newTask = {
+        title: title,
+        description: descriptionRef.current.value,
+        status: statusRef.current.value
+      }
+
+      try {
+        await addTask(newTask)
+        alert("Task creata con successo")
+        setTitle("")
+        descriptionRef.current.value = ''
+        statusRef.current.value = ''
+      } catch (error) {
+        alert(`Error ${error.message}`)
+      }
+
 
     }
+
   }
+
 
   return (
     <div className="container">
@@ -65,11 +80,11 @@ export default function AddTask() {
 
 
           <div className="mb-3 d-flex gap-2">
-            <label htmlFor="staus">Stato</label>
+            <label>Stato</label>
             <select name="status" id="status" ref={statusRef} className='form-select'>
-              <option value="todo">To do</option>
-              <option value="doing">Doing</option>
-              <option value="done">Done</option>
+              <option value="To do">To do</option>
+              <option value="Doing">Doing</option>
+              <option value="Done">Done</option>
             </select>
           </div>
 
