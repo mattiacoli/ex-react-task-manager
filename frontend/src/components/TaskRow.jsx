@@ -1,14 +1,13 @@
+import { memo } from 'react'
 
-export default function TaskRow({ task }) {
-
+const TaskRow = memo(function TaskRow({ task }) {
   return (
-    <tr>
+    <tr className="tab_row">
       <td>{task.title}</td>
-      <td>{task.status}</td>
-      <td
-        className="status"
-
-      >{new Date(task.createdAt).toLocaleString()}</td>
+      <td className={`status ${task.status?.toLowerCase().replaceAll(' ', '')} `}>{task.status}</td>
+      <td>{new Date(task.createdAt).toLocaleString()}</td>
     </tr>
   )
-}
+})
+
+export default TaskRow

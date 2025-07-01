@@ -5,3 +5,17 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.status {
+  &.todo {
+    background-color: red;
+  }
+
+  &.doing {
+    background-color: yellow;
+  }
+
+  &.done {
+    background-color: green;
+  }
+}
