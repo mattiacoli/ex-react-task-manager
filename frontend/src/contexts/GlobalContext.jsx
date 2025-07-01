@@ -28,7 +28,7 @@ function GlobalProvider({ children }) {
 }
 
 function useGlobalContext() {
-  const context = useContext(GlobalProvider)
+  const context = useContext(GlobalContext)
   return context
 }
 
