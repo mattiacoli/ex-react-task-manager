@@ -15,16 +15,16 @@ export default function useTasks() {
   }, [])
 
   // ADD TASK
-  const addTask = async (obj) => {
+  const addTask = async (task) => {
     fetch(baseURL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(obj)
+      body: JSON.stringify(task)
     })
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          setTasks([...tasks, obj])
+          setTasks([...tasks, task])
         } else {
           throw new Error(data.message)
         }
@@ -32,7 +32,19 @@ export default function useTasks() {
   }
 
   // REMOVE TASK
-  const removeTask = () => { }
+  const removeTask = async (taskID) => {
+    fetch(`${baseURL}/${parseInt(taskID)}`, {
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks(tasks.filter(t => t.id !== taskID))
+        } else {
+          throw new Error(data.message)
+        }
+      })
+  }
 
   // EDIT TASK
   const editTask = () => { }
@@ -43,6 +55,4 @@ export default function useTasks() {
     removeTask,
     editTask
   }
-
-
 }
