@@ -1,31 +1,58 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
 export default function AddTask() {
   // controlled input
   const [title, setTitle] = useState('')
+  const [error, setError] = useState('')
 
   // uncontrolled input
   const descriptionRef = useRef()
   const statusRef = useRef()
 
+  // title validation
+  const isTitleValid = useMemo(() => {
+    const titleLenght = title.trim().length > 0
+    const charIsValid = !title.split('').some(char => symbols.includes(char.toLowerCase()))
+    return titleLenght && charIsValid
+  }, [title])
+
+  // submit handler
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    if (isTitleValid) {
+      console.log(`
+        Titolo : ${title}
+        Descrizione : ${descriptionRef.current.value}
+        Stato: ${statusRef.current.value}
+        `);
+
+    }
+  }
 
   return (
     <div className="container">
       <h1 className="text-center">AddTask</h1>
 
       <div className="container my-4">
-        <form action="">
+        <form action="" onSubmit={submitHandler}>
           <div className="mb-3">
-
             <input
               className='form-control'
               type="text"
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="titolo" />
+              placeholder="titolo"
+              required />
+
+            {title.trim().length > 0 && (
+              <p style={{ color: isTitleValid ? 'green' : 'red', marginTop: '.5rem', fontWeight: 500 }}>
+                {isTitleValid ? 'Titolo Valido' : 'il titolo non puo` contenere simboli'}
+              </p>
+            )}
           </div>
 
           <div className="mb-3">
@@ -45,8 +72,10 @@ export default function AddTask() {
               <option value="done">Done</option>
             </select>
           </div>
+
+          <button type='submit' className='btn btn-primary'>Add Task</button>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }
