@@ -1,10 +1,17 @@
+// hooks
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../contexts/GlobalContext'
+import { useState } from 'react';
+
+// component
+import Modal from '../components/Modal';
 
 export default function TaskDetails() {
   const { id } = useParams()
   const { tasks = [], removeTask } = useGlobalContext()
   const navigate = useNavigate()
+
+  const [show, setShow] = useState(false)
 
   const selectedTask = tasks.find(t => t.id === parseInt(id))
 
@@ -44,7 +51,15 @@ export default function TaskDetails() {
 
           <button
             className='btn btn-danger'
-            onClick={deleteTask}>Delete</button>
+            onClick={() => setShow(true)}>Delete</button>
+
+          <Modal
+            title="Eliminare la task ?"
+            content="Conferma se vuoi davvero eliminare la task"
+            show={show}
+            onClose={() => setShow(false)}
+            onConfirm={() => deleteTask(selectedTask.id)}
+          />
         </>
       )}
 

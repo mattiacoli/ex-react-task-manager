@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
-import useTasks from '../hooks/useTasks';
+import { useGlobalContext } from '../contexts/GlobalContext';
 
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
@@ -11,7 +11,7 @@ export default function AddTask() {
   const descriptionRef = useRef()
   const statusRef = useRef()
 
-  const { addTask } = useTasks()
+  const { addTask } = useGlobalContext()
 
   // title validation
   const isTitleValid = useMemo(() => {
