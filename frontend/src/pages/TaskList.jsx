@@ -1,17 +1,35 @@
 // hooks
 import { useGlobalContext } from "../contexts/GlobalContext"
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 
 // components
 import TaskRow from "../components/TaskRow"
 
+// debounce function
+function debounce(callback, delay) {
+  let timer;
+  return (value) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback(value);
+    }, delay)
+  };
+}
+
 
 export default function TaskList() {
-
+  // Global Context
   const { tasks = [] } = useGlobalContext()
 
+  //ref
+  const queryRef = useRef()
+
+
+  // state
   const [sortBy, setSortBy] = useState("createdAt")
   const [sortOrder, setSortOrder] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
+
 
   const statusOrder = {
     "To do": 0,
@@ -28,9 +46,23 @@ export default function TaskList() {
     }
   }
 
+  const handleSearch = useCallback(
+    debounce((query) => {
+      setSearchQuery(query)
+    }, 500)
+    , [])
+
+
+
   const sortedTasks = useMemo(() => {
     const copia = [...tasks]
-    copia.sort((a, b) => {
+
+    const filteredTasks = copia.filter(t => {
+      return t.title?.toLowerCase().includes(searchQuery.toLowerCase())
+    })
+
+
+    filteredTasks.sort((a, b) => {
       let result = 0
 
       if (sortBy === 'title') {
@@ -44,11 +76,8 @@ export default function TaskList() {
       return result * sortOrder
 
     })
-    return copia
-  }, [tasks, sortBy, sortOrder])
-
-
-  console.log(sortBy, sortOrder)
+    return filteredTasks
+  }, [tasks, sortBy, sortOrder, searchQuery])
 
 
   return (
@@ -56,6 +85,14 @@ export default function TaskList() {
     <div className="container my-4">
 
       <h1 className="text-center">Task List</h1>
+
+      <div className="my-4">
+        <input
+          ref={queryRef}
+          type="text"
+          className="form-control"
+          onChange={() => handleSearch(queryRef.current?.value || '')} />
+      </div>
 
       {/* Task list table */}
       <table className="table">
