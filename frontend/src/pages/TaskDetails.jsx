@@ -5,13 +5,15 @@ import { useState } from 'react';
 
 // component
 import Modal from '../components/Modal';
+import EditTaskModal from '../components/EditTaskModal';
 
 export default function TaskDetails() {
   const { id } = useParams()
-  const { tasks = [], removeTask } = useGlobalContext()
+  const { tasks = [], removeTask, updateTask } = useGlobalContext()
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
 
   const selectedTask = tasks.find(t => t.id === parseInt(id))
 
@@ -29,6 +31,17 @@ export default function TaskDetails() {
 
   }
 
+  // edit handler
+  const handleEdit = async (editedTask) => {
+    try {
+      const updatedTask = { ...selectedTask, ...editedTask }
+      await updateTask(updatedTask)
+      alert('Modifica avvenuta con successo')
+      setShowEdit(false)
+    } catch (error) {
+      alert(`Error : ${error.message}`)
+    }
+  }
   return (
 
     <div className="container d-flex flex-column justify-content-center gap-3 mt-5">
@@ -53,12 +66,25 @@ export default function TaskDetails() {
             className='btn btn-danger'
             onClick={() => setShow(true)}>Delete</button>
 
+          <button
+            className='btn  btn-warning'
+            onClick={() => setShowEdit(true)}>Edit</button>
+
+          {/* Delete Modal */}
           <Modal
             title="Eliminare la task ?"
             content="Conferma se vuoi davvero eliminare la task"
             show={show}
             onClose={() => setShow(false)}
             onConfirm={() => deleteTask(selectedTask.id)}
+          />
+
+          {/* Edit Task Modal */}
+          <EditTaskModal
+            show={showEdit}
+            onClose={() => setShowEdit(false)}
+            task={selectedTask}
+            onSave={handleEdit}
           />
         </>
       )}

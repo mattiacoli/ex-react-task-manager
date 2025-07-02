@@ -47,12 +47,27 @@ export default function useTasks() {
   }
 
   // EDIT TASK
-  const editTask = () => { }
+  const updateTask = async (updatedTask) => {
+    await fetch(`${baseURL}/${parseInt(updatedTask.id)}`, {
+      method: "PUT",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(updatedTask)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setTasks([...tasks, updatedTask])
+        } else {
+          throw new Error(data.message)
+        }
+      })
+  }
+
 
   return {
     tasks,
     addTask,
     removeTask,
-    editTask
+    updateTask
   }
 }
