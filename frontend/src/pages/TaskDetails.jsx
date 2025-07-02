@@ -38,6 +38,7 @@ export default function TaskDetails() {
       await updateTask(updatedTask)
       alert('Modifica avvenuta con successo')
       setShowEdit(false)
+      window.location.reload();
     } catch (error) {
       alert(`Error : ${error.message}`)
     }
@@ -63,12 +64,13 @@ export default function TaskDetails() {
           </div>
 
           <button
+            className='btn  btn-warning'
+            onClick={() => setShowEdit(true)}>Edit</button>
+
+          <button
             className='btn btn-danger'
             onClick={() => setShow(true)}>Delete</button>
 
-          <button
-            className='btn  btn-warning'
-            onClick={() => setShowEdit(true)}>Edit</button>
 
           {/* Delete Modal */}
           <Modal

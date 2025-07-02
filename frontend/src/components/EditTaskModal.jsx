@@ -9,27 +9,28 @@ export default function EditTaskModal({ show, onClose, task, onSave, }) {
 
   const editFormRef = useRef()
 
-  const handleConfirm = (e) => {
-    e.preventDefault
+  const handleConfirm = () => {
+
+    editFormRef.current.requestSubmit()
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
 
     const editedTask = {
       title: title,
       description: description,
       status: stato
     }
-    editFormRef.current.requestSubmit()
 
     onSave(editedTask)
-
   }
-
-
 
   return (
     <Modal
       title="Modifica Task"
       content={
-        <form ref={editFormRef} onSubmit={onSave} >
+        <form ref={editFormRef} onSubmit={handleFormSubmit} >
           <div className="mb-3">
             <input
               className='form-control'
@@ -70,7 +71,6 @@ export default function EditTaskModal({ show, onClose, task, onSave, }) {
       onClose={onClose}
       confirmText="Salva"
       onConfirm={handleConfirm}
-
     />
   )
 }
