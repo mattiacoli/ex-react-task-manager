@@ -49,7 +49,7 @@ export default function TaskList() {
   const handleSearch = useCallback(
     debounce((query) => {
       setSearchQuery(query)
-    }, 500)
+    }, 300)
     , [])
 
 
@@ -86,11 +86,13 @@ export default function TaskList() {
 
       <h1 className="text-center">Task List</h1>
 
+      {/* Search Bar */}
       <div className="my-4">
         <input
-          ref={queryRef}
           type="text"
           className="form-control"
+          placeholder="Cerca..."
+          ref={queryRef}
           onChange={() => handleSearch(queryRef.current?.value || '')} />
       </div>
 
