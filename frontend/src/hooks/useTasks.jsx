@@ -16,19 +16,25 @@ export default function useTasks() {
 
   // ADD TASK
   const addTask = async (task) => {
-    fetch(baseURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(task)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setTasks([...tasks, task])
-        } else {
-          throw new Error(data.message)
-        }
+
+    if (tasks.map(t => t.title).includes(task.title)) {
+      throw new Error(`Task con nome ${task.title} esiste già`)
+
+    } else {
+      fetch(baseURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task)
       })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setTasks([...tasks, task])
+          } else {
+            throw new Error(data.message)
+          }
+        })
+    }
   }
 
   // REMOVE TASK

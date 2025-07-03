@@ -17,7 +17,7 @@ export default function TaskDetails() {
   const [showEdit, setShowEdit] = useState(false)
 
   const selectedTask = tasks.find(t => t.id === parseInt(id))
-  const date = dayjs(selectedTask.createdAt)
+  const date = dayjs(selectedTask?.createdAt)
 
   // delete handler
   const deleteTask = async () => {
