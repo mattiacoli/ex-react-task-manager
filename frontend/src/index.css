@@ -18,6 +18,7 @@
   }
 
   &.done {
+    color: white;
     background-color: green;
   }
 }
