@@ -9,10 +9,10 @@ const GlobalContext = createContext()
 
 function GlobalProvider({ children }) {
 
-  const { tasks, addTask, updateTask, removeTask } = useTasks()
+  const { tasks, addTask, updateTask, removeTask, removeMultipleTasks } = useTasks()
 
   return (
-    <GlobalContext.Provider value={{ tasks, addTask, updateTask, removeTask }}>
+    <GlobalContext.Provider value={{ tasks, addTask, updateTask, removeTask, removeMultipleTasks }}>
       {children}
     </GlobalContext.Provider>
   )

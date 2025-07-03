@@ -46,6 +46,28 @@ export default function useTasks() {
       })
   }
 
+
+  // REMOVE MULTIPLE TASKS
+  const removeMultipleTasks = async (tasksIds) => {
+
+    const tasksPromise = tasksIds.map(id => {
+      return fetch(`${baseURL}/${id}`, {
+        method: "DELETE"
+      })
+    })
+
+    const data = await Promise.allSettled(tasksPromise)
+
+    data.forEach((result, index) => {
+      if (result.status === "rejected") {
+        throw new Error(`Non sono state eliminate le task con id:${tasksIds[index]}`)
+      }
+    })
+
+    setTasks(tasks.filter(t => !tasksIds.includes(t.id)))
+    window.location.reload();
+  }
+
   // EDIT TASK
   const updateTask = async (updatedTask) => {
     await fetch(`${baseURL}/${parseInt(updatedTask.id)}`, {
@@ -68,6 +90,7 @@ export default function useTasks() {
     tasks,
     addTask,
     removeTask,
-    updateTask
+    updateTask,
+    removeMultipleTasks
   }
 }

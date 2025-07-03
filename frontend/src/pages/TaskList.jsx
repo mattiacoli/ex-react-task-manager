@@ -19,7 +19,7 @@ function debounce(callback, delay) {
 
 export default function TaskList() {
   // Global Context
-  const { tasks = [] } = useGlobalContext()
+  const { tasks = [], removeMultipleTasks } = useGlobalContext()
 
   //ref
   const queryRef = useRef()
@@ -38,9 +38,6 @@ export default function TaskList() {
       setSelectedTaskIds(prev => prev.filter(id => id !== taskID))
     }
   }
-  console.log(selectedTaskIds);
-
-
 
   const statusOrder = {
     "To do": 0,
@@ -126,6 +123,12 @@ export default function TaskList() {
           ))}
         </tbody>
       </table>
+
+      {selectedTaskIds.length > 0 && (
+        <button
+          className="btn btn-danger"
+          onClick={() => removeMultipleTasks(selectedTaskIds)}>Elimina Tasks selezionate</button>
+      )}
 
     </div>
   )
