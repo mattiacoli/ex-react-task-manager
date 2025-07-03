@@ -60,6 +60,16 @@ export default function TaskList() {
     }, 300)
     , [])
 
+  const handleMultiRemove = async (taskIds) => {
+    try {
+      await removeMultipleTasks(taskIds)
+      alert('Operazione completata con successo')
+      setSelectedTaskIds('')
+    } catch (error) {
+      throw new Error(alert(error.message))
+    }
+  }
+
 
 
   const sortedTasks = useMemo(() => {
@@ -127,7 +137,7 @@ export default function TaskList() {
       {selectedTaskIds.length > 0 && (
         <button
           className="btn btn-danger"
-          onClick={() => removeMultipleTasks(selectedTaskIds)}>Elimina Tasks selezionate</button>
+          onClick={() => handleMultiRemove(selectedTaskIds)}>Elimina Tasks selezionate</button>
       )}
 
     </div>

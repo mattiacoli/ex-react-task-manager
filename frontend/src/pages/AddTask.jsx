@@ -35,6 +35,7 @@ export default function AddTask() {
         await addTask(newTask)
         alert("Task creata con successo")
         setTitle("")
+        window.location.reload()
         descriptionRef.current.value = ''
         statusRef.current.value = ''
       } catch (error) {
