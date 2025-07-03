@@ -1,7 +1,11 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 const TaskRow = memo(function TaskRow({ task, checked, onToggle }) {
+
+  const date = dayjs(task.createdAt)
+
   return (
     <tr className="tab_row">
       <td className='d-flex gap-2'>
@@ -17,7 +21,7 @@ const TaskRow = memo(function TaskRow({ task, checked, onToggle }) {
       </td>
 
       <td className={`status ${task.status?.toLowerCase().replaceAll(' ', '')}  text-center`}>{task.status}</td>
-      <td className='text-end'>{new Date(task.createdAt).toLocaleString()}</td>
+      <td className='text-end'>{date.format("DD/MM/YY")}</td>
     </tr>
   )
 })

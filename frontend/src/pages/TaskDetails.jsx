@@ -4,6 +4,7 @@ import { useGlobalContext } from '../contexts/GlobalContext'
 import { useState } from 'react';
 
 // component
+import dayjs from 'dayjs';
 import Modal from '../components/Modal';
 import EditTaskModal from '../components/EditTaskModal';
 
@@ -16,6 +17,7 @@ export default function TaskDetails() {
   const [showEdit, setShowEdit] = useState(false)
 
   const selectedTask = tasks.find(t => t.id === parseInt(id))
+  const date = dayjs(selectedTask.createdAt)
 
   // delete handler
   const deleteTask = async () => {
@@ -59,7 +61,7 @@ export default function TaskDetails() {
             </div>
             <div className={`card-footer status ${selectedTask.status?.toLowerCase().replaceAll(' ', '')}`}>
               <p>{selectedTask.status}</p>
-              <p>{new Date(selectedTask.createdAt).toDateString()}</p>
+              <p>{date.format('DD/MM/YYYY')}</p>
             </div>
           </div>
 
