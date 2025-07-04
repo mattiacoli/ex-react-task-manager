@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useReducer } from 'react'
+import tasksReducer from '../reducers/tasksReducer'
 
 const baseURL = import.meta.env.VITE_API_URL
 
 export default function useTasks() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, dispatchTasks] = useReducer(tasksReducer, [])
 
   useEffect(() => {
     fetch(baseURL)
       .then(res => res.json())
       .then(data => {
-        setTasks(data)
+        dispatchTasks({ type: 'LOAD_TASKS', payload: data })
       })
       .catch(error => console.error(error.message))
   }, [])
@@ -29,7 +30,7 @@ export default function useTasks() {
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            setTasks([...tasks, task])
+            dispatchTasks({ type: "ADD_TASK", payload: task })
           } else {
             throw new Error(data.message)
           }
@@ -45,13 +46,12 @@ export default function useTasks() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          setTasks(tasks.filter(t => t.id !== taskID))
+          dispatchTasks({ type: "REMOVE_TASK", payload: taskID })
         } else {
           throw new Error(data.message)
         }
       })
   }
-
 
   // REMOVE MULTIPLE TASKS
   const removeMultipleTasks = async (tasksIds) => {
@@ -70,25 +70,34 @@ export default function useTasks() {
       }
     })
 
-    setTasks(tasks.filter(t => !tasksIds.includes(t.id)))
+    dispatchTasks({ type: "REMOVE_MULTIPLE_TASKS", payload: tasksIds })
+      (tasks.filter(t => !tasksIds.includes(t.id)))
     window.location.reload();
   }
 
   // EDIT TASK
   const updateTask = async (updatedTask) => {
-    await fetch(`${baseURL}/${parseInt(updatedTask.id)}`, {
-      method: "PUT",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(updatedTask)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setTasks([...tasks, updatedTask])
-        } else {
-          throw new Error(data.message)
-        }
+    const updateTitle = tasks.find(t => t.title === updateTask.title)
+
+    if (updateTitle && updateTitle.id !== updateTask) {
+      throw new Error(`Task con nome ${updatedTask.title} esiste già`)
+
+    } else {
+      await fetch(`${baseURL}/${parseInt(updatedTask.id)}`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(updatedTask)
       })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            dispatchTasks({ type: "UPDATE_TASK", payload: updatedTask })
+          } else {
+            throw new Error(data.message)
+          }
+        })
+    }
+
   }
 
 
